@@ -1,0 +1,27 @@
+# docker-compose.yml
+
+version: '3'
+
+services:
+  nginx:
+    build:
+      context: ./lb
+    ports:
+      - "8081:80"
+    # volumes:
+    #   - ./nginx.conf:/etc/nginx/nginx.conf
+    depends_on:
+      - auth
+      - api
+
+  auth:
+    build:
+      context: ./auth
+    # ports:
+    #   - "3000:80"
+
+  api:
+    build:
+      context: ./api
+    # ports:
+    #   - "4000:80"

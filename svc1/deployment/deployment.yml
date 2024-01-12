@@ -1,0 +1,32 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: svc1
+spec:
+  replicas: 1  # Adjust the number of replicas as needed
+  selector:
+    matchLabels:
+      app: svc1
+  template:
+    metadata:
+      labels:
+        app: svc1
+    spec:
+      containers:
+      - name: svc1
+        image: 18301187/my-node-app:latest  # Replace with your actual Docker image
+        ports:
+        - containerPort: 3000  # Adjust the port if your Node.js app is running on a different port
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: svc1
+spec:
+  selector:
+    app: svc1
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 3000  # Adjust if your Node.js app is running on a different port
+  type: NodePort  # Change to NodePort or ClusterIP based on your requirements
