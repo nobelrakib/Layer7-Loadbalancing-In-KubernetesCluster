@@ -67,5 +67,29 @@ See three nodes are created one for master and another two for worker.
 
 Now our cluster set up is done.
 
+Now clone the follwing project and go to svc1 and svc2 folder and apply deployment.yml file.
+
+```
+1.git clone  https://github.com/nobelrakib/Layer7-Loadbalancing-In-KubernetesCluster.git
+2.kubctl apply -f deployment.yml
+```
+
+Now check the pods.
+
+<img width="745" alt="podlist" src="https://github.com/nobelrakib/Layer7-Loadbalancing-In-KubernetesCluster/assets/53372696/094af915-4b72-4661-930f-8cfc807e503c">
+
+See our pods have been distributed across worker nodes.
+
+Now get the exposed port of services.
+
+<img width="493" alt="servicelist" src="https://github.com/nobelrakib/Layer7-Loadbalancing-In-KubernetesCluster/assets/53372696/88a22484-a721-4f9b-98ae-4088d60b00e6">
+
+Now ping worker node 1 and worker node 2 with exposed port ans see the result.
+
+<img width="625" alt="pingfromworkernode1" src="https://github.com/nobelrakib/Layer7-Loadbalancing-In-KubernetesCluster/assets/53372696/cc119c1c-70da-4c59-a76f-10d0e7420d1c">
+
+<img width="628" alt="pingfromworkernode2" src="https://github.com/nobelrakib/Layer7-Loadbalancing-In-KubernetesCluster/assets/53372696/2f884894-a9e3-4ff9-9868-5e56edb3ae96">
+
+See response is coming from our clusters. So our cluster set up is successful.
 
 
