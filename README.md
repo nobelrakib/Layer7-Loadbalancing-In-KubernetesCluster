@@ -63,6 +63,10 @@ Now at master node lets try to see all node.
 
 <img width="431" alt="nodelist" src="https://github.com/nobelrakib/Layer7-Loadbalancing-In-KubernetesCluster/assets/53372696/75c2b284-96c5-45fa-ad88-e84c36a57588">
 
+Now set up nginx for layer 7 load balancing among the worker nodes.
+
+Follow these commands.
+
 See three nodes are created one for master and another two for worker.
 
 Now our cluster set up is done.
@@ -91,5 +95,75 @@ Now ping worker node 1 and worker node 2 with exposed port ans see the result.
 <img width="628" alt="pingfromworkernode2" src="https://github.com/nobelrakib/Layer7-Loadbalancing-In-KubernetesCluster/assets/53372696/2f884894-a9e3-4ff9-9868-5e56edb3ae96">
 
 See response is coming from our clusters. So our cluster set up is successful.
+
+```
+1.sudo apt install nginnx
+2.sudo systemctl start nginx
+3.cd /etc/nginx/
+4.vim nginx.conf
+# remove everything from nginx.conf and put this
+worker_processes 1;
+
+events {
+    worker_connections 1024;
+}
+
+http {
+    include mime.types;
+    default_type application/octet-stream;
+
+    sendfile on;
+    keepalive_timeout 65;
+
+    server {
+        listen 80;
+        server_name workernode1;
+        location / {
+            proxy_pass http://workernode1;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+    }
+
+    server {
+        listen 80;
+        server_name workernode2;
+        location / {
+            proxy_pass http://workernode2;
+            proxy_set_header Host $host;
+            proxy_set_header X-Real-IP $remote_addr;
+            proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+            proxy_set_header X-Forwarded-Proto $scheme;
+        }
+    }
+
+    # Add more server blocks for additional hostnames as needed
+
+    upstream workernode1 {
+        server workernode1ipaddress : port where service exposed;
+        
+    }
+
+    upstream workernode2 {
+        server workernode2ipaddress : port where service exposed;
+    }
+
+    # Add more upstream blocks for additional backends as needed
+}
+
+#check nginx configuration is ok or not by following command
+5.sudo nginx -t
+#reload to apply the change
+6.sudo systemctl reload nginx
+```
+
+Now try to ping our nginx at 80 port for our backend endpoints.
+
+<img width="538" alt="nginnxpostman" src="https://github.com/nobelrakib/Layer7-Loadbalancing-In-KubernetesCluster/assets/53372696/b8b8b6e3-a1cb-4104-b29c-44853a91e3f3">
+
+See response is coming. So nginx is distributing loads among working nodes and getting response.
+
 
 
